@@ -38,7 +38,9 @@ class Detect:
           self.labelDict[label.description] = label.score
       print(self.labelDict)
       
-  def createJSON(self,routeNo):
+  def createJSON(self,routeNo,configFile):
+    with open(configFile) as data_file:
+      self.routeDict = json.load(data_file)
     for key in self.labelDict.keys():
       if ('congestion' in key):
         if(self.labelDict[key]>0.70):
@@ -49,6 +51,7 @@ class Detect:
           self.routeDict[routeNo] = 0
           print('No Congestion')
       
+    print self.routeDict
     with open('config.json', 'w') as outfile:
       json.dump(self.routeDict,outfile)
 
@@ -56,15 +59,16 @@ def main():
       detect=Detect()
       count = 1
       while (count<5):
-        if len(sys.argv) == 3:
+        if len(sys.argv) > 1:
           filePath = sys.argv[1]
           routeNo = sys.argv[2]
+          configFile = sys.argv[3]
           detect.processImage(filePath)
-          detect.createJSON(routeNo)
+          detect.createJSON(routeNo,configFile)
           break
         else:
           detect.captureImage(count)
-          path = '/home/pi/Desktop/TrafficCongestion/image_' + str(count) + '.jpg'
+          path = '/home/pi/Desktop/TrafficCongestion/TrafficControl/image_' + str(count) + '.jpg'
           detect.processImage(path)
           count = count+1
        

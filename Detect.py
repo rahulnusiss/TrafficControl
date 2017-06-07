@@ -41,17 +41,24 @@ class Detect:
   def createJSON(self,routeNo,configFile):
     with open(configFile) as data_file:
       self.routeDict = json.load(data_file)
+      print self.routeDict
     for key in self.labelDict.keys():
       if ('congestion' in key):
         if(self.labelDict[key]>0.70):
-          self.routeDict[routeNo] = 1
+          
+          if(routeNo == "Route1"):
+            self.routeDict[routeNo] = 1
+            self.routeDict["Route2"] = 0
+          elif(routeNo == "Route2"):
+            self.routeDict[routeNo] = 1
+            self.routeDict["Route1"] = 0
           print('Congestion on {0}' .format(routeNo))
           break
         else:
           self.routeDict[routeNo] = 0
           print('No Congestion')
       
-    print self.routeDict
+    
     with open('config.json', 'w') as outfile:
       json.dump(self.routeDict,outfile)
 

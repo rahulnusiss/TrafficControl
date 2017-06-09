@@ -57,15 +57,18 @@ def startRelay1(routeNumber):
 
 # Actual IOT Relay Control
 def startRelay(route1, route2):
-	minTime = 10
-	maxTime = 20
+	timeData = readConfig('init.json')
+	print("Min ", timeData['Min'], "Max ", timeData['Max'] )
+	minTime = timeData['Min']
+	maxTime = timeData['Max']
 	timeCounter = minTime-5
 	if True == route1.isOpen:
 		# Relay input 1,3 On
 		route1.startRoute();
 		time.sleep(timeCounter)
 		while(timeCounter < maxTime):
-			data = readConfig()
+			data = readConfig('config.json')
+			print("Route1 ", data['Route1'], "Route2 ", data['Route2'] )
 			if data['Route1'] == 1:
 				print("Route 1 open ", timeCounter, "seconds")
 				timeCounter = timeCounter+2
@@ -90,7 +93,8 @@ def startRelay(route1, route2):
 		route2.startRoute();
 		time.sleep(timeCounter)
 		while(timeCounter < maxTime):
-			data = readConfig()
+			data = readConfig('config.json')
+			print("Route1 ", data['Route1'], "Route2 ", data['Route2'] )
 			if data['Route2'] == 1:
 				print("Route 2 open ", timeCounter, "seconds")
 				timeCounter = timeCounter+2
@@ -110,10 +114,10 @@ def startRelay(route1, route2):
 		startRelay(route1,route2)
 		
 
-def readConfig():	
-	with open('config.json') as data_file:    
+def readConfig(fileName):	
+	with open(fileName) as data_file:
 		data = json.load(data_file);
-		print("Route1 ", data['Route1'], "Route2 ", data['Route2'] )
+		#print("Rote1 ", data['Route1'], "Route2 ", data['Route2'] )
 	return data;
 	
 	
